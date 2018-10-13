@@ -28,7 +28,7 @@ sudo start_vpn_client.sh
 
 ## Why Centos?
 
-Please don't ask.
+Please don't ask, that wasn't my idea.
 
 ## Is this safe?
 
@@ -68,9 +68,13 @@ or in my case:
 ip route add xxx.xxx.xxx.xxx via 192.168.42.1 dev ppp0
 ```
 
-## I'm stuck with 'Errno 22: Invalid argument'
+## What's my local ip?
 
-Yup, me too. See [issue #1](https://github.com/GabLeRoux/l2tp-ipsec-vpn-setup-scripts/issues/1). Help me! :fire:
+```bash
+ip a
+```
+
+It should be somewhere in here, look for `eth0` or `wlan0` if you're on a wifi.
 
 ## Vagrant
 
@@ -84,17 +88,15 @@ vagrant ssh
 sudo /app/setup_vpn_client.sh
 ```
 
-## What's my local ip?
+It's a good idea to try it on a VM first so you don't polute your server before knowing it works.
 
-```bash
-ip a
-```
+## I'm stuck with 'Errno 22: Invalid argument'
 
-It should be somewhere in here, look for `eth0` or `wlan0` if you're on a wifi.
+Yup, me too. See [issue #1](https://github.com/GabLeRoux/l2tp-ipsec-vpn-setup-scripts/issues/1). Help me! :fire:
 
 ## Contributing
 
-Contribution are welcome, I may not maintain this project much, but you can open issues or send pull-requests. :v:
+Contributions are welcome, I may not maintain this project much, but you can open issues or send pull-requests. :v:
 
 ## License
 
