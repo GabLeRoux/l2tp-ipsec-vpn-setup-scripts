@@ -141,6 +141,7 @@ if [ "$ROUTE_ALL_TRAFFIC" -eq 1 ]; then
   #curl https://checkip.amazonaws.com/
 elif [ "$ROUTE_SINGLE_IP" -eq 1 ]; then
   if [ -z ${IP_RANGE_BEHIND_VPN+x} ]; then echo "IP_RANGE_BEHIND_VPN must be set"; exit -1; fi
+  # https://www.commandlinefu.com/commands/view/1908/get-the-ip-address-of-a-machine.-just-the-ip-no-junk.
   TUNNEL_DEVICE_IP=`ip -o -4 a show dev ppp0 | awk -F '[ /]+' '/global/ {print $4}'`
   ip route add $IP_RANGE_BEHIND_VPN via $TUNNEL_DEVICE_IP dev $LOCAL_DEVICE
 fi
