@@ -50,7 +50,13 @@ ip a show dev ppp0
     inet 192.168.42.10 peer 192.168.42.1/32 scope global ppp0
        valid_lft forever preferred_lft forever
 ```
-In my case, it's `192.168.42.1`. Then you need to update your routing table to let your system know how to reach the desired server behind vpn using your `ppp0` device. Command looks like that:
+In my case, it's `192.168.42.1`. We can get this with the following magic command:
+
+```bash
+ip -o -4 a show dev ppp0 | awk -F '[ /]+' '/global/ {print $4}'
+``` 
+
+Then you need to update your routing table to let your system know how to reach the desired server behind vpn using your `ppp0` device. Command looks like that:
 
 ```bash
 ip route add xxx.xxx.xxx.xxx via yyy.yyy.yyy.yyy dev pppX
@@ -64,28 +70,7 @@ ip route add xxx.xxx.xxx.xxx via 192.168.42.1 dev ppp0
 
 ## I'm stuck with 'Errno 22: Invalid argument'
 
-Yup, me too. Worked on a vpn I did setup myself using [hwdsl2/setup-ipsec-vpn](https://github.com/hwdsl2/setup-ipsec-vpn), but I'm trying to connect on a different server which I did not configure and I'm still fighting as I'm stuck here:
-
-```
-+ ipsec auto --up L2TP-PSK
-002 "L2TP-PSK" #1: initiating Main Mode
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in reply packet for main_outI1. Errno 22: Invalid argument
-104 "L2TP-PSK" #1: STATE_MAIN_I1: initiate
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 0.5 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 1 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 2 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 4 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 8 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-010 "L2TP-PSK" #1: STATE_MAIN_I1: retransmission; will wait 16 seconds for response
-003 ERROR: "L2TP-PSK" #1: sendto on lo to ###.###.###.###:500 failed in EVENT_v1_RETRANSMIT. Errno 22: Invalid argument
-```
-
-Note: I obfuscated VPN Server IP to `###.###.###.###`. If you know how to solve this, please poke me.
+Yup, me too. See [issue #1](https://github.com/GabLeRoux/l2tp-ipsec-vpn-setup-scripts/issues/1). Help me! :fire:
 
 ## Vagrant
 
