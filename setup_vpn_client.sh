@@ -19,6 +19,25 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
+if [ -n $LEFT_ID -a $LEFT_ID != $LOCAL_IP ]
+  then
+    LEFT_ID_CONF="leftid= $LEFT_ID"
+    LEFT_ID_SECRET="$LEFT_ID $VPN_SERVER_IP : PSK \"$VPN_IPSEC_PSK\""
+  else
+    LEFT_ID_CONF="#leftid="
+    LEFT_ID_SECRET=""
+fi
+
+if [ -n $RIGHT_ID -a $RIGHT_ID != $VPN_SERVER_IP ]
+  then
+    RIGHT_ID_CONF="rightid= $RIGHT_ID"
+    RIGHT_ID_SECRET="$LOCAL_IP $RIGHT_ID : PSK \"$VPN_IPSEC_PSK\""
+  else
+    RIGHT_ID_CONF="#rightid="
+    RIGHT_ID_SECRET=""
+fi
+
+
 set -x
 set -e
 
@@ -61,13 +80,17 @@ conn $CONNECTION_NAME
 # Replace %any below with your local IP address (private, behind NAT IP is okay as well)
      left=$LOCAL_IP
      leftprotoport=17/1701
+     $LEFT_ID_CONF
 # Replace IP address with your VPN server's IP
      right=$VPN_SERVER_IP
      rightprotoport=17/1701
+     $RIGHT_ID_CONF
 EOF
 
 cat > /etc/ipsec.secrets <<EOF
 $LOCAL_IP $VPN_SERVER_IP : PSK "$VPN_IPSEC_PSK"
+$LEFT_ID_SECRET
+$RIGHT_ID_SECRET
 EOF
 
 ipsec stop || true
